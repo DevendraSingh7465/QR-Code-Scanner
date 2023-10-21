@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR COde SCanner</title>
+    <script src="index.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <style>
+        body{
+            margin: 0;
+            display: flex;
+            justify-content: center;
+        }
+        .outer{
+
+        }
+        .result{
+            background-color: green;
+            color:#fff;
+            padding:20px;
+        }
+        .row{
+            display:flex;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="outer">
+
+        <div class="row">
+            <div class="col">
+                <div style="width:500px;" id="reader"></div>
+            </div>
+        </div>
+        <div class="col" style="padding:30px;">
+            <h4>SCAN RESULT</h4>
+            <div id="result">Result will be shown here and this text will be replaced.</div>
+        </div>
+    </div>
+      
+      
+      <script type="text/javascript">
+      function onScanSuccess(qrCodeMessage) {
+            document.getElementById('result').innerHTML = '<span class="result">'+qrCodeMessage+'</span>';
+            console.log("First - "+qrCodeMessage);
+            const myArray = qrCodeMessage.split("%");
+            let word1 = myArray[0];
+            let word2 = myArray[1];
+            let data123 = {name:word1,urn:word2};
+            console.log(data123)
+            $.ajax({
+                url:"index.php",
+                method:"post",
+                data:data123,
+                success: function(res){
+                    console.log(res);
+                }
+            })
+      }
+      
+      
+      function onScanError(errorMessage) {
+        //handle scan error
+      }
+      
+      var html5QrcodeScanner = new Html5QrcodeScanner(
+          "reader", { fps: 1, qrbox: 250 });
+      html5QrcodeScanner.render(onScanSuccess, onScanError);
+      
+      </script>
+</body>
+</html>
+
